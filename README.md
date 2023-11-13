@@ -17,4 +17,4 @@ Follow these steps to get started with Paprok:
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/your-username/paprok.git
+   git clone https://github.com/sooryx/PapRok_Social_Media.git
