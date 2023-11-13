@@ -64,37 +64,41 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 onLastpage
                     ? GestureDetector(
                         onTap: () {
-                          _controller.nextPage(
-                              duration: Duration(microseconds: 500),
-                              curve: Curves.easeIn);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginOrRegister()));
                         },
-                        child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginOrRegister()));
-                            },
-                            child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 5.h, horizontal: 8.w),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(40.r),
-                                    color: Colors.white54),
-                                child: Text(
-                                  "Done",
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .secondary),
-                                ))))
+                        child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5.h, horizontal: 8.w),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40.r),
+                                color: Colors.white54),
+                            child: Text(
+                              "Done",
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
+                            )))
                     : GestureDetector(
                         onTap: () {
                           _controller.nextPage(
                               duration: Duration(microseconds: 5000),
                               curve: Curves.easeIn);
                         },
-                        child: Text("Next"))
+                        child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5.h, horizontal: 8.w),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(40.r),
+                                color: Colors.white54),
+                            child: Text(
+                              "Next",
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.secondary),
+                            )))
               ],
             ),
           )

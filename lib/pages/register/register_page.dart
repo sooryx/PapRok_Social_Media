@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:socialmedia/components/rounded%20Button.dart';
+import 'package:socialmedia/pages/register/bio.dart';
+import 'package:socialmedia/pages/register/email_id.dart';
+import 'package:socialmedia/pages/register/official_name_user.dart';
+import 'package:socialmedia/pages/register/passwords.dart';
+import 'package:socialmedia/pages/register/username.dart';
 import '../../auth/firebase_auth/firebase_auth_services.dart';
-import '../../components/my_textfields.dart';
 import 'intro_reg.dart';
+
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
@@ -19,16 +24,18 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final FirebaseAuthService _auth = FirebaseAuthService();
   PageController _controller = PageController();
-
+  TextEditingController officialnameController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmpasswordController = TextEditingController();
-  bool confirmpass = false;
+  TextEditingController bioController = TextEditingController();
+
 
   @override
   void dispose() {
     _controller.dispose();
+    officialnameController.dispose();
     usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
@@ -42,175 +49,36 @@ class _RegisterPageState extends State<RegisterPage> {
       body: PageView(
         controller: _controller,
         children: [
+
+          ///INTRO_SCREEN
           RegistrationFirstScreen(
             controller: _controller,
           ),
-          Container(
-            padding: EdgeInsets.all(10.dg),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Create Your Identity",
-                  style: TextStyle(fontSize: 30.sp),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                Container(
-                  padding: EdgeInsets.all(10.dg),
-                  child: Text(
-                    "Give yourself a unique identity by choosing a cool username for your paprok account.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                MyTextField(
-                  hintText: 'p@prock',
-                  obscureText: false,
-                  controller: usernameController,
-                  icon: Icon(Icons.alternate_email_rounded),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                RoundButton(
-                  icon: Icon(Icons.arrow_forward_ios_rounded),
-                  onPressed: () {
-                    _controller.nextPage(
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.bounceIn,
-                    );
-                  },
-                )
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(10.dg),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Enter your E-Mail ID",
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 30.sp,
-                  ),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                Container(
-                  padding: EdgeInsets.all(10.dg),
-                  child: Text(
-                    "Awesome username! Now, share your email ID. \n We'll keep it safe, promise!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                MyTextField(
-                  hintText: 'example@paprok.in',
-                  obscureText: false,
-                  controller: emailController,
-                  icon: Icon(Icons.mail_outline_rounded),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                RoundButton(
-                  icon: Icon(Icons.arrow_forward_ios_rounded),
-                  onPressed: () {
-                    _controller.nextPage(
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.bounceIn,
-                    );
-                  },
-                )
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(10.dg),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Secure your account ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    fontSize: 30.sp,
-                  ),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                Container(
-                  padding: EdgeInsets.all(10.dg),
-                  child: Text(
-                    "Choose one that only you can crack! ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                MyTextField(
-                  hintText: 'Enter Password',
-                  obscureText: false,
-                  controller: passwordController,
-                  icon: Icon(Icons.lock),
-                ),
-                SizedBox(
-                  height: 20.h,
-                ),
-                MyTextField(
-                  hintText: 'Confirm Password',
-                  obscureText: false,
-                  controller: confirmpasswordController,
-                  icon: Icon(Icons.lock),
-                ),
-                SizedBox(height: 10.h,),
-                confirmpass
-                    ? Text("Password do not match with each other ",
-                  style: TextStyle(color: Colors.red),)
-                    : SizedBox(
-                  height: 10.h,
-                ),
-                SizedBox(height: 10.h,),
-                RoundButton(
-                  icon: Icon(Icons.arrow_forward_ios_rounded),
-                  onPressed: () {
-                    if (passwordController.text ==
-                        confirmpasswordController.text) {
-                      _controller.nextPage(
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.bounceIn);
-                    } else {
-                      setState(() {
-                        confirmpass = true;
-                      });
-                    }
-                  },
-                )
-              ],
-            ),
-          ),
+
+          ///NAME_OF_THE_USER
+          OfficialName(controller: _controller,
+              officialnameController: officialnameController),
+
+
+          ///USERNAME
+          UserName(officialnameController: officialnameController,
+              usernameController: usernameController,
+              controller: _controller),
+
+          ///MAIL_ID
+          EmailID(controller: _controller,
+              usernameController: usernameController,
+              emailController: emailController),
+
+          ///PASSWORD
+          Passwords(passwordController: passwordController,
+              controller: _controller,
+              confirmpasswordController: confirmpasswordController),
+
+          ///SHORT_BIO
+          Bio(bioController: bioController, controller: _controller,),
+
+          ///ALL_SET
           Container(
             padding: EdgeInsets.all(10.dg),
             child: Column(
@@ -248,6 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   icon: Icon(Icons.check),
                   onPressed: () {
                     _signUp();
+                    Navigator.pushNamed(context, '/home');
                   },
                 )
               ],
@@ -259,14 +128,20 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _signUp() async {
+    String officialname = officialnameController.text;
+    String username = usernameController.text;
     String email = emailController.text;
     String password = passwordController.text;
-    String username = usernameController.text;
+    String bio = bioController.text;
+
 
     User? user = await _auth.signUpWithEmailAndPassword(
+      officialname,
+      username,
       email,
       password,
-      username,
+      bio,
+
     );
 
     if (user != null) {

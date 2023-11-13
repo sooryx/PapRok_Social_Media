@@ -13,14 +13,40 @@ class RegistrationFirstScreen extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          "Let's get started!",
-          style: TextStyle(fontSize: 30.sp, fontWeight: FontWeight.bold,color: Theme.of(context).colorScheme.onSurface),
+        Container(
+          padding: EdgeInsets.all(10.dg),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Welcome to Paprok!",
+                style: TextStyle(fontSize: 30.sp),
+              ),
+              SizedBox(
+                height: 30.h,
+              ),
+              Text(
+                "Get ready to embark on a journey of connection and exploration.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 14.sp,
+                ),
+              ),
+              SizedBox(
+                height: 30.h,
+              ),
+              // Add any additional text or styling as needed
+            ],
+          ),
         ),
-        SizedBox(height: 30.h,),
-        RoundButton(icon: Icon(Icons.arrow_forward_ios_rounded), onPressed: () {
-          controller.nextPage(duration: Duration(milliseconds: 5000), curve: Curves.bounceIn);
-        },)
+        RoundButton(
+          icon: Icon(Icons.arrow_forward_ios_rounded),
+          onPressed: () {
+            controller.nextPage(
+                duration: Duration(milliseconds: 5000), curve: Curves.bounceIn);
+          },
+        )
       ],
     );
   }

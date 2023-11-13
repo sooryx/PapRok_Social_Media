@@ -29,18 +29,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_outlined,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        elevation: 0,
-      ),
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Center(
         child: Padding(

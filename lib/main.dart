@@ -1,3 +1,4 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +7,7 @@ import 'package:socialmedia/firebase_options.dart';
 import 'package:socialmedia/pages/home_page.dart';
 import 'package:socialmedia/pages/profile_page.dart';
 import 'package:socialmedia/pages/register/register_page.dart';
+import 'package:socialmedia/splash/splash_screen.dart';
 import 'package:socialmedia/themes/dark_mode.dart';
 import 'package:socialmedia/themes/light_mode.dart';
 
@@ -38,11 +40,22 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             // home: RegisterPage(onTap: () {  },),
-            home:  const OnBoardingScreen(),
+            home: AnimatedSplashScreen(
+                backgroundColor: Theme.of(context).colorScheme.onSecondary,
+                animationDuration: Duration(milliseconds: 1000),
+                splash: Image.asset(filterQuality: FilterQuality.high,
+                  'assets/images/logo-removebg-preview.png',
+                  // height: 250.h,
+                  // width: 250.w,
+                  // fit: BoxFit.fitHeight,
+                ),splashIconSize: 500.sp,
+                splashTransition: SplashTransition.fadeTransition,
+                // pageTransitionType: PageTransitionsBuild,
+                nextScreen: const OnBoardingScreen()),
             routes: {
-              '/login_or_reg':(context) => const LoginOrRegister(),
-              '/home':(context) => const Homepage(),
-              '/user_profile':(context) => const ProfilePage()
+              '/login_or_reg': (context) => const LoginOrRegister(),
+              '/home': (context) =>  Homepage(),
+              '/user_profile': (context) => const ProfilePage()
             },
             theme: lightMode,
             darkTheme: darkMode,

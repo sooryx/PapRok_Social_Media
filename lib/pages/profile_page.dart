@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialmedia/components/my_textfields.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -15,10 +15,14 @@ class _ProfilePageState extends State<ProfilePage> {
   String username = "";
   String profilePhoto = "";
   String emailid = "";
+  String officialname = "";
+  String bio = "";
+  String passwords = "";
   TextEditingController EditUsernameController = TextEditingController();
   TextEditingController EditNameController = TextEditingController();
   TextEditingController EditEmailController = TextEditingController();
-  TextEditingController descriptionController = TextEditingController();
+  TextEditingController EditbioController = TextEditingController();
+  TextEditingController EditpasswordController = TextEditingController();
 
   _profileInfo() async {
     try {
@@ -32,7 +36,6 @@ class _ProfilePageState extends State<ProfilePage> {
             profilePhoto = user.photoURL.toString();
             emailid = user.email.toString();
           });
-          EditNameController.text = username;
           EditEmailController.text = emailid;
         }
       });
@@ -51,22 +54,28 @@ class _ProfilePageState extends State<ProfilePage> {
       if (user != null) {
         // Fetch data from Firestore
         DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-            await FirebaseFirestore.instance
-                .collection('Users')
-                .doc(user.uid)
-                .get();
+        await FirebaseFirestore.instance
+            .collection('Users')
+            .doc(user.uid)
+            .get();
 
         if (documentSnapshot.exists) {
           Map<String, dynamic> userData = documentSnapshot.data()!;
 
           setState(() {
             username = userData['username'] ?? "Paproker";
-            // profilePhoto = userData['profilePhoto'] ?? "";
+            profilePhoto = userData['profilePhoto'] ?? "";
             emailid = user.email ?? "";
+            officialname = userData['official name'] ?? "Paprok";
+            bio = userData['bio'] ?? "Add your bio ";
+            passwords = userData['password'] ?? "Add your bio ";
           });
 
           // Set the username to the controller
+          EditNameController.text = officialname;
           EditUsernameController.text = username;
+          EditbioController.text = bio;
+          EditpasswordController.text = passwords;
         }
       }
     } catch (e) {
@@ -74,6 +83,24 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         username = "Paproker";
       });
+    }
+  }
+
+  // Function to update user profile data in Firestore
+  Future<void> _updateUserProfile() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      try {
+        await FirebaseFirestore.instance.collection('Users').doc(user.uid).update({
+          'username': EditUsernameController.text,
+          'official name': EditNameController.text,
+          'bio': EditbioController.text,
+        });
+        print('User profile updated successfully');
+      } catch (e) {
+        print('Error updating user profile: $e');
+      }
     }
   }
 
@@ -91,10 +118,13 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: Theme.of(context).colorScheme.background,
         elevation: 6,
         actions: [
-          Icon(
-            Icons.check,
+          IconButton(
+            icon: Icon(Icons.check),
             color: Colors.green,
-            size: 30.sp,
+            iconSize: 30.sp,
+            onPressed: () {
+              _updateUserProfile(); // Call function to update user profile
+            },
           )
         ],
       ),
@@ -150,12 +180,21 @@ class _ProfilePageState extends State<ProfilePage> {
                 controller: EditEmailController),
             SizedBox(
               height: 20.h,
-            ), MyTextField(
-              maxLength: 150,
+            ),
+            MyTextField(
+                hintText: '',
+                icon: Icon(Icons.remove_red_eye),
+                obscureText: true,
+                controller: EditpasswordController),
+            SizedBox(
+              height: 20.h,
+            ),
+            MyTextField(
+                maxLength: 150,
                 hintText: 'Your Description',
                 icon: Icon(Icons.info_outline),
                 obscureText: false,
-                controller: descriptionController),
+                controller: EditbioController),
             SizedBox(
               height: 20.h,
             ),

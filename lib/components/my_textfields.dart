@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class MyTextField extends StatelessWidget {
   final int? maxLength;
   final String hintText;
   final bool obscureText;
   final Icon? icon;
   final TextEditingController controller;
-  const MyTextField({super.key, required this.hintText, required this.obscureText, required this.controller, this.icon, this.maxLength});
+
+
+  const MyTextField(
+      {super.key,
+      required this.hintText,
+      required this.obscureText,
+      required this.controller,
+      this.icon,
+      this.maxLength,});
 
   @override
   Widget build(BuildContext context) {
