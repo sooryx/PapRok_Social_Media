@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:socialmedia/components/my_textfields.dart';
+import 'dart:io';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -13,7 +15,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String username = "";
-  String profilePhoto = "";
   String emailid = "";
   String officialname = "";
   String bio = "";
@@ -30,10 +31,8 @@ class _ProfilePageState extends State<ProfilePage> {
         if (user != null) {
           print(user.uid);
           print(user.displayName);
-          print(user.photoURL);
           setState(() {
             username = user.displayName.toString();
-            profilePhoto = user.photoURL.toString();
             emailid = user.email.toString();
           });
           EditEmailController.text = emailid;
@@ -64,7 +63,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
           setState(() {
             username = userData['username'] ?? "Paproker";
-            profilePhoto = userData['profilePhoto'] ?? "";
             emailid = user.email ?? "";
             officialname = userData['official name'] ?? "Paprok";
             bio = userData['bio'] ?? "Add your bio ";
@@ -123,36 +121,27 @@ class _ProfilePageState extends State<ProfilePage> {
             color: Colors.green,
             iconSize: 30.sp,
             onPressed: () {
-              _updateUserProfile(); // Call function to update user profile
+              _tohome();// Call function to update user profile
             },
           )
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        padding: EdgeInsets.symmetric(horizontal: 8.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
               height: 20.h,
             ),
-            Stack(children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(5.r),
-                child: SizedBox(
-                  width: 80.w,
-                  height: 80.h,
-                  child: Image.network(profilePhoto),
-                ),
+            Container(
+              padding: EdgeInsets.all(25.dg),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).colorScheme.primary
               ),
-              Positioned(
-                  right: 2.w,
-                  child: IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {},
-                    color: Theme.of(context).colorScheme.primary,
-                  ))
-            ]),
+              child: Icon(Icons.person,size: 50.sp,),
+            ),
             SizedBox(
               height: 20.h,
             ),
@@ -202,5 +191,10 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  void _tohome() {
+    _updateUserProfile();
+    Navigator.pushNamed(context, '/home');
   }
 }

@@ -5,13 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:socialmedia/auth/login_or_register.dart';
 import 'package:socialmedia/firebase_options.dart';
 import 'package:socialmedia/pages/home_page.dart';
+import 'package:socialmedia/pages/onboarding_screen/onboarding_screen.dart';
 import 'package:socialmedia/pages/profile_page.dart';
 import 'package:socialmedia/pages/register/register_page.dart';
-import 'package:socialmedia/splash/splash_screen.dart';
+import 'package:socialmedia/pages/signin_with_google.dart';
 import 'package:socialmedia/themes/dark_mode.dart';
 import 'package:socialmedia/themes/light_mode.dart';
 
-import 'onboarding_screen/onboarding_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,7 +39,6 @@ class MyApp extends StatelessWidget {
         builder: (_, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            // home: RegisterPage(onTap: () {  },),
             home: AnimatedSplashScreen(
                 backgroundColor: Theme.of(context).colorScheme.onSecondary,
                 animationDuration: Duration(milliseconds: 1000),
@@ -55,7 +54,8 @@ class MyApp extends StatelessWidget {
             routes: {
               '/login_or_reg': (context) => const LoginOrRegister(),
               '/home': (context) =>  Homepage(),
-              '/user_profile': (context) => const ProfilePage()
+              '/user_profile': (context) => const ProfilePage(),
+              '/_signin_google':(context) => const SigninWithGoogle()
             },
             theme: lightMode,
             darkTheme: darkMode,

@@ -1,9 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:socialmedia/auth/login_or_register.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({Key? key}) : super(key: key);
@@ -14,27 +12,36 @@ class MyDrawer extends StatefulWidget {
 
 class _MyDrawerState extends State<MyDrawer> {
   String username = "";
-  String profilePhoto = "";
 
   @override
   void initState() {
+    _fetchUserData();
     super.initState();
-    _profileInfo();
   }
 
-  _profileInfo() async {
+  Future<void> _fetchUserData() async {
     try {
-      FirebaseAuth.instance.authStateChanges().listen((User? user) {
-        if (user != null) {
-          print(user.uid);
-          print(user.displayName);
-          print(user.photoURL);
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Fetch data from Firestore
+        DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
+            await FirebaseFirestore.instance
+                .collection('Users')
+                .doc(user.uid)
+                .get();
+
+        if (documentSnapshot.exists) {
+          Map<String, dynamic> userData = documentSnapshot.data()!;
+
           setState(() {
-            username = user.displayName.toString();
-            profilePhoto = user.photoURL.toString();
+            username = userData['username'] ?? "Paproker";
           });
+
+          // Set the username to the controller
+          // UsernameController.text = username;
         }
-      });
+      }
     } catch (e) {
       print("Error: $e");
       setState(() {
@@ -61,57 +68,67 @@ class _MyDrawerState extends State<MyDrawer> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(5.r),
-                        child: SizedBox(
-                          width: 50.w,
-                          height: 50.h,
-                          child: Image.network(
-                            profilePhoto,
-                            fit: BoxFit.fill,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.person,
+                            size: 50.sp,
                           ),
-                        ),
-                      ),
-                      SizedBox(width: 10.w),
-                      Text(
-                        username,
-                        style: TextStyle(
-                            fontSize: 16.sp, fontWeight: FontWeight.bold),
+                          SizedBox(height: 20.h),
+                          Text(
+                            username,
+                            style: TextStyle(
+                                fontSize: 16.sp, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.all(8.dg),
-                child: Container(
-                  padding: EdgeInsets.all(5.dg),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary,
-                      borderRadius: BorderRadius.circular(12.r)),
-                  child: ListTile(
-                    leading: Icon(Icons.home),
-                    title: Text(
-                      "Home",
-                      style: TextStyle(fontSize: 16.sp),
+              GestureDetector(
+                onTap: _tohome,
+                child: Padding(
+                  padding: EdgeInsets.all(8.dg),
+                  child: Container(
+                    padding: EdgeInsets.all(5.dg),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondary,
+                        borderRadius: BorderRadius.circular(12.r)),
+                    child: ListTile(
+                      leading: Icon(Icons.home),
+                      title: Text(
+                        "Home",
+                        style: TextStyle(fontSize: 16.sp),
+                      ),
                     ),
                   ),
                 ),
               ),
 
               ///POST
-              Padding(
-                padding: EdgeInsets.all(8.dg),
-                child: Container(
-                  padding: EdgeInsets.all(5.dg),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondary,
-                      borderRadius: BorderRadius.circular(12.r)),
-                  child: ListTile(
-                    leading: Icon(Icons.post_add),
-                    title: Text(
-                      "Post",
-                      style: TextStyle(fontSize: 16.sp),
+              GestureDetector(
+                onTap: () {
+                  if (FirebaseAuth.instance.currentUser?.isAnonymous == true) {
+                    Navigator.pushNamed(context, '/login_or_reg');
+                  } else {
+                    Navigator.pushNamed(context, '/user_profile');
+                  }
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(8.dg),
+                  child: Container(
+                    padding: EdgeInsets.all(5.dg),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondary,
+                        borderRadius: BorderRadius.circular(12.r)),
+                    child: ListTile(
+                      leading: Icon(Icons.post_add),
+                      title: Text(
+                        "My Posts",
+                        style: TextStyle(fontSize: 16.sp),
+                      ),
                     ),
                   ),
                 ),
@@ -120,7 +137,11 @@ class _MyDrawerState extends State<MyDrawer> {
               ///PROFILE
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/user_profile');
+                  if (FirebaseAuth.instance.currentUser?.isAnonymous == true) {
+                    Navigator.pushNamed(context, '/login_or_reg');
+                  } else {
+                    Navigator.pushNamed(context, '/user_profile');
+                  }
                 },
                 child: Padding(
                   padding: EdgeInsets.all(8.dg),
@@ -169,5 +190,9 @@ class _MyDrawerState extends State<MyDrawer> {
         ],
       ),
     );
+  }
+
+  void _tohome() {
+    Navigator.pushNamed(context, '/home');
   }
 }

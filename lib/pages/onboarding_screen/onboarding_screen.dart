@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:socialmedia/auth/login_or_register.dart';
-import 'package:socialmedia/onboarding_screen/intro_pages/intropage_1.dart';
-import 'package:socialmedia/onboarding_screen/intro_pages/intropage_2.dart';
-import 'package:socialmedia/onboarding_screen/intro_pages/intropage_3.dart';
-import 'package:socialmedia/pages/login_page.dart';
+import 'package:socialmedia/pages/signin_with_google.dart';
+
+import 'intro_pages/intropage_1.dart';
+import 'intro_pages/intropage_2.dart';
+import 'intro_pages/intropage_3.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({super.key});
@@ -43,7 +43,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               children: [
                 GestureDetector(
                     onTap: () {
-                      _controller.jumpToPage(2);
+                      Navigator.pushNamed(context, '/_signin_google');
                     },
                     child: Container(
                         padding: EdgeInsets.symmetric(
@@ -64,10 +64,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 onLastpage
                     ? GestureDetector(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginOrRegister()));
+                        Navigator.pushNamed(context, '/_signin_google');
                         },
                         child: Container(
                             padding: EdgeInsets.symmetric(
