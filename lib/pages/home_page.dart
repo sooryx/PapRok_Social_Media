@@ -65,6 +65,7 @@ class _HomepageState extends State<Homepage> {
         'UserName': username,
         'Message': postController.text,
         'Timestamp': Timestamp.now(),
+        'Likes':[]
       });
     }
   }
@@ -73,7 +74,7 @@ class _HomepageState extends State<Homepage> {
     // Implement your refresh logic here, for example, refetch data from Firestore
     await _fetchUserData();
     setState(() {
-      // Update your state as needed
+
     });
   }
 
@@ -129,6 +130,8 @@ class _HomepageState extends State<Homepage> {
                       return WallPost(
                         message: post['Message'] ?? "No message",
                         user: post['UserName'] ?? "Unknown-User",
+                        postID: post.id,
+                        likes: List<String>.from(post['Likes'] ?? []),
                       );
                     },
                   );

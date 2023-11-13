@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:socialmedia/components/my_textfields.dart';
 import 'dart:io';
@@ -195,6 +196,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _tohome() {
     _updateUserProfile();
+    Fluttertoast.showToast(
+        msg: "Profile Updated Succefully",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 12.0);
     Navigator.pushNamed(context, '/home');
   }
 }

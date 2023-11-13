@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,11 +28,15 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation:0 ,
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        elevation: 0,
+        backgroundColor: Theme
+            .of(context)
+            .colorScheme
+            .primary,
         actions: [TextButton(onPressed: () {
           _skipasAnonymous();
-        }, child: Text("Skip",style: TextStyle(color: Colors.white),))],
+        }, child: Text("Skip", style: TextStyle(color: Colors.white),))
+        ],
       ),
       body: Center(
         child: Padding(
@@ -43,7 +48,10 @@ class _LoginPageState extends State<LoginPage> {
                 Icon(
                   Icons.person,
                   size: 80.sp,
-                  color: Theme.of(context).colorScheme.inversePrimary,
+                  color: Theme
+                      .of(context)
+                      .colorScheme
+                      .inversePrimary,
                 ),
                 SizedBox(
                   height: 25.h,
@@ -75,7 +83,10 @@ class _LoginPageState extends State<LoginPage> {
                     Text(
                       "Forgot Password",
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.secondary),
+                          color: Theme
+                              .of(context)
+                              .colorScheme
+                              .secondary),
                     )
                   ],
                 ),
@@ -89,9 +100,33 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: 20.h,
                 ),
-
+                GestureDetector(
+                  onTap: () {
+                    _signInWithGoogle();
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(25.dg),
+                    decoration: BoxDecoration(
+                        color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(12.r)),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(FontAwesomeIcons.google),
+                        SizedBox(
+                          width: 4.w,
+                        ),
+                        Text(
+                          "Continue with google",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16.sp),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
                 SizedBox(
-                  height: 25.h,
+                  height: 30.h,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -127,10 +162,10 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  _skipasAnonymous () async {
+  _skipasAnonymous() async {
     try {
       final userCredential =
-          await FirebaseAuth.instance.signInAnonymously();
+      await FirebaseAuth.instance.signInAnonymously();
       print("Signed in with temporary account.");
       _tohome();
     } on FirebaseAuthException catch (e) {
@@ -141,6 +176,46 @@ class _LoginPageState extends State<LoginPage> {
         default:
           print("Unknown error.");
       }
+    }
+  }
+
+  _signInWithGoogle() async {
+    final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+    try {
+      final GoogleSignInAccount? googleSignInAccount =
+      await _googleSignIn.signIn();
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+        await googleSignInAccount.authentication;
+
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          idToken: googleSignInAuthentication.idToken,
+          accessToken: googleSignInAuthentication.accessToken,
+        );
+
+        await FirebaseAuth.instance.signInWithCredential(credential);
+        final currentUser = FirebaseAuth.instance.currentUser; // Get the current user after signing in
+        _tohome();
+
+        await FirebaseFirestore.instance.collection("Users").doc(currentUser!.uid).set({
+          'official name': currentUser.displayName.toString(),
+          'username': 'p@pr0keR',
+          'email': currentUser.email.toString(),
+          'password': '',
+          'bio': 'I\'m new to paprok',
+        });
+      }
+    } catch (e) {
+      return Fluttertoast.showToast(
+        msg: "Some error occurred: $e",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 12.0,
+      );
     }
   }
 
@@ -156,7 +231,4 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.pushNamed(context, '/home');
   }
 
-  void _toupdatebioOrPhoto() {
-    Navigator.pushNamed(context, '/bio_uname');
-  }
 }

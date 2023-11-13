@@ -141,7 +141,6 @@ class _RegisterPageState extends State<RegisterPage> {
       email,
       password,
       bio,
-
     );
 
     if (user != null) {
